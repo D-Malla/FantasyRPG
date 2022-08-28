@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "Main.generated.h"
 
+class AWeapon;
+
 UENUM(BlueprintType)
 enum class EMovementStatus : uint8
 {
@@ -140,5 +142,10 @@ public:
 
 	FORCEINLINE USpringArmComponent* GetSpringArm() const { return SpringArmComponent; }
 	FORCEINLINE UCameraComponent* GetCamera() const { return CameraComponent; }
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Items")
+	AWeapon* EquippedWeapon;
+
+	FORCEINLINE void SetEquippedWeapon(AWeapon* WeaponToSet) { EquippedWeapon = WeaponToSet; }
 };
 
