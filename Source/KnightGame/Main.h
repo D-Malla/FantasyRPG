@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Main.generated.h"
 
+class AItem;
 class AWeapon;
 
 UENUM(BlueprintType)
@@ -140,12 +141,23 @@ public:
 	
 	void LookUpAtRate(float Rate);
 
+	bool bLMBDown;
+	
+	void LMBDown();
+	
+	void LMBUp();
+
 	FORCEINLINE USpringArmComponent* GetSpringArm() const { return SpringArmComponent; }
 	FORCEINLINE UCameraComponent* GetCamera() const { return CameraComponent; }
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Items")
 	AWeapon* EquippedWeapon;
 
-	FORCEINLINE void SetEquippedWeapon(AWeapon* WeaponToSet) { EquippedWeapon = WeaponToSet; }
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Items")
+	class AItem* ActiveOverlappingItem;
+
+	void SetEquippedWeapon(AWeapon* WeaponToSet);
+	FORCEINLINE AWeapon* GetEquippedWeapon() { return EquippedWeapon; }
+	FORCEINLINE void SetActiveOverlappingItem(AItem* Item) { ActiveOverlappingItem = Item; }
 };
 

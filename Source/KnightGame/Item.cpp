@@ -3,6 +3,7 @@
 
 #include "Item.h"
 
+#include "Main.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -56,14 +57,19 @@ void AItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 {
 	UE_LOG(LogTemp, Warning, TEXT("Super::OnOverlapBegin()"));
 
-	if (OverlapParticles)
-	{
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OverlapParticles, GetActorLocation(), FRotator(0.0f), true);
-	}
+	const AMain* Main = Cast<AMain>(OtherActor);
 
-	if (OverlapSound)
+	if (Main)
 	{
-		UGameplayStatics::PlaySound2D(this, OverlapSound);
+		if (OverlapParticles)
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), OverlapParticles, GetActorLocation(), FRotator(0.0f), true);
+		}
+
+		if (OverlapSound)
+		{
+			UGameplayStatics::PlaySound2D(this, OverlapSound);
+		}
 	}
 }
 

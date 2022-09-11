@@ -7,6 +7,16 @@
 #include "Weapon.generated.h"
 
 class AMain;
+class USoundCue;
+
+UENUM(BlueprintType)
+enum class EWeaponState : uint8
+{
+	EWS_Pickup		UMETA(Displayname = "Pickup"),
+	EWS_Equipped	UMETA(Displayname = "Equipped"),
+
+	EWS_MAX		UMETA(Displayname = "DefaultMax")
+};
 
 UCLASS()
 class KNIGHTGAME_API AWeapon : public AItem
@@ -17,6 +27,15 @@ public:
 
 	AWeapon();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Item")
+	EWeaponState WeaponState;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item | Particles")
+	bool bWeaponParticles;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item | Sound")
+	USoundCue* OnEquipSound;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SkeletalMesh")
 	USkeletalMeshComponent* SkeletalMesh;
 	
@@ -25,4 +44,9 @@ public:
 	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
 
 	void Equip(AMain* Char);
-};
+
+	FORCEINLINE void SetWeaponState(EWeaponState State) { WeaponState = State; }
+	FORCEINLINE EWeaponState GetWeaponState() { return WeaponState; }
+	
+	
+ };
