@@ -15,7 +15,7 @@ enum class EWeaponState : uint8
 	EWS_Pickup		UMETA(Displayname = "Pickup"),
 	EWS_Equipped	UMETA(Displayname = "Equipped"),
 
-	EWS_MAX		UMETA(Displayname = "DefaultMax")
+	EWS_MAX			UMETA(Displayname = "DefaultMAX")
 };
 
 UCLASS()
