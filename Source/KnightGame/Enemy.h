@@ -8,6 +8,10 @@
 
 class AAIController;
 class AMain;
+class UAnimMontage;
+class UBoxComponent;
+class UParticleSystem;
+class USoundCue;
 class USphereComponent;
 
 UENUM(BlueprintType)
@@ -34,14 +38,39 @@ public:
 
 	FORCEINLINE void SetEnemyMovementStatus(EEnemyMovementStatus Status) { EnemyMovementStatus = Status; }
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI | Components")
 	USphereComponent* AggroSphere;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI | Components")
 	USphereComponent* CombatSphere;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI | Controller")
 	AAIController* AIController;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI | Stats")
+	float Health;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI | Stats")
+	float MaxHealth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI | Stats")
+	float Damage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI | Particles")
+	UParticleSystem* HitParticles;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI | Sound")
+	USoundCue* HitSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI | Sound")
+	USoundCue* SwingSound;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI | Combat")
+	UBoxComponent* CombatCollision;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI | Combat")
+	UAnimMontage* CombatMontage;
+	
 	
 protected:
 	// Called when the game starts or when spawned
@@ -74,5 +103,25 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
 	AMain* CombatTarget;
+
+	UFUNCTION()
+	void CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+	UFUNCTION()
+	void CombatOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	
+	UFUNCTION(BlueprintCallable)
+	void ActivateCollision();
+
+	UFUNCTION(BlueprintCallable)
+	void DeactivateCollision();
+	
+	void Attack();
+
+	UFUNCTION(BlueprintCallable)
+	void AttackEnd();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI | Combat")
+	bool bAttacking;
 };
 

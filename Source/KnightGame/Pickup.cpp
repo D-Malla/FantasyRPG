@@ -15,8 +15,6 @@ void APickup::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* O
 {
 	Super::OnOverlapBegin(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
 
-	UE_LOG(LogTemp, Warning, TEXT("Pickup::OnOverlapBegin()"));
-
 	if (OtherActor)
 	{
 		AMain* Main = Cast<AMain>(OtherActor);
@@ -35,6 +33,4 @@ void APickup::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 	int32 OtherBodyIndex)
 {
 	Super::OnOverlapEnd(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex);
-
-	UE_LOG(LogTemp, Warning, TEXT("Pickup::OnOverlapEnd()"));
 }

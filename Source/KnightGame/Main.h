@@ -9,6 +9,10 @@
 class AItem;
 class AWeapon;
 class UAnimMontage;
+class UCameraComponent;
+class UParticleSystem;
+class USoundCue;
+class USpringArmComponent;
 
 UENUM(BlueprintType)
 enum class EMovementStatus : uint8
@@ -31,9 +35,6 @@ enum class EStaminaStatus : uint8
 	
 };
 
-class USpringArmComponent;
-class UCameraComponent;
-
 UCLASS()
 class KNIGHTGAME_API AMain : public ACharacter
 {
@@ -42,6 +43,12 @@ class KNIGHTGAME_API AMain : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AMain();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	UParticleSystem* HitParticles;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	USoundCue* HitSound;
 
 	TArray<FVector> PickupLocations;
 
@@ -84,7 +91,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "True"))
 	UCameraComponent* CameraComponent;
-
+	
 	// Base turn rates to scale turning functions for the camera
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	float BaseTurnRate;
@@ -112,12 +119,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Stats")
 	int32 Coins;
-
-	void DecrementHealth(float Amount);
-
-	void IncrementCoins(int32 Amount);
-
-	void Die();
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims")
+	UAnimMontage* CombatMontage;
 	
 protected:
 	// Called when the game starts or when spawned
@@ -168,8 +172,14 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims")
-	UAnimMontage* CombatMontage;
+
+	void DecrementHealth(float Amount);
+
+	void IncrementCoins(int32 Amount);
+
+	void Die();
+
+	UFUNCTION(BlueprintCallable)
+	void PlaySwingSound();
 };
 
