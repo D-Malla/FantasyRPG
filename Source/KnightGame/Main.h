@@ -167,6 +167,10 @@ public:
 	// Called for side to side input
 	void MoveRight(float Value);
 
+	bool bMovingForward;
+
+	bool bMovingRight;
+
 	// Called to look up/down at a given rate
 	// @param Rate This is a normalized rate, ie. 1.0 means 100% of desired look up/down rate
 	void TurnAtRate(float Rate);
