@@ -20,6 +20,7 @@ enum class EEnemyMovementStatus : uint8
 	EMS_Idle			UMETA(DisplayName = "Idle"),
 	EMS_MoveToTarget	UMETA(DisplayName = "MoveToTarget"),
 	EMS_Attacking		UMETA(DisplayName = "Attacking"),
+	EMS_Dead			UMETA(DisplayName = "Dead"),
 
 	EMS_MAX				UMETA(DisplayName = "DefaultMAX")
 };
@@ -32,10 +33,13 @@ class KNIGHTGAME_API AEnemy : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AEnemy();
-
+	
+	bool bHasValidTarget;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	EEnemyMovementStatus EnemyMovementStatus;
 
+	FORCEINLINE EEnemyMovementStatus GetEnemyMovementStatus() const { return EnemyMovementStatus; }
 	FORCEINLINE void SetEnemyMovementStatus(EEnemyMovementStatus Status) { EnemyMovementStatus = Status; }
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI | Components")
@@ -70,8 +74,22 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI | Combat")
 	UAnimMontage* CombatMontage;
-	
-	
+
+	FTimerHandle AttackTimer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI | Combat")
+	float AttackMinTime;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI | Combat")
+	float AttackMaxTime;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI | Combat")
+	TSubclassOf<UDamageType> DamageTypeClass;
+
+	FTimerHandle DeathTimer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI | Combat")
+	float DeathDelay;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -115,13 +133,24 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void DeactivateCollision();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI | Combat")
+	bool bAttacking;
 	
 	void Attack();
 
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI | Combat")
-	bool bAttacking;
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
+	void Die();
+
+	UFUNCTION(BlueprintCallable)
+	void DeathEnd();
+
+	bool Alive();
+
+	void Disappear();
 };
 

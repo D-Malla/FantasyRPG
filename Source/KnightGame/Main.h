@@ -6,7 +6,9 @@
 #include "GameFramework/Character.h"
 #include "Main.generated.h"
 
+class AEnemy;
 class AItem;
+class AMainPlayerController;
 class AWeapon;
 class UAnimMontage;
 class UCameraComponent;
@@ -19,6 +21,7 @@ enum class EMovementStatus : uint8
 {
 	EMS_Normal			UMETA(DisplayName = "Normal"),
 	EMS_Sprinting		UMETA(DisplayName = "Sprinting"),
+	EMS_Dead			UMETA(DisplayName = "Dead"),
 
 	EMS_MAX				UMETA(DisplayName = "DefaultMAX")
 };
@@ -44,6 +47,17 @@ public:
 	// Sets default values for this character's properties
 	AMain();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	bool bHasCombatTarget;
+
+	FORCEINLINE void SetHasCombatTarget(bool HasTarget) { bHasCombatTarget = HasTarget; }
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Combat")
+	FVector CombatTargetLocation;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Controller")
+	AMainPlayerController* MainPlayerController;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	UParticleSystem* HitParticles;
 
@@ -68,6 +82,19 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float MinSprintStamina;
+
+	float InterpSpeed;
+
+	bool bInterpToEnemy;
+
+	void SetInterpToEnemy(bool Interp);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	AEnemy* CombatTarget;
+
+	FORCEINLINE void SetCombatTarget(AEnemy* Target) { CombatTarget = Target; }
+
+	FRotator GetLookAtRotationYaw(FVector Target) const;
 	
 	// Set movement status and running speed
 	void SetMovementStatus(EMovementStatus Status);
@@ -175,11 +202,19 @@ public:
 
 	void DecrementHealth(float Amount);
 
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const &DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
 	void IncrementCoins(int32 Amount);
 
 	void Die();
 
 	UFUNCTION(BlueprintCallable)
+	void DeathEnd();
+
+	virtual void Jump() override;
+
+	UFUNCTION(BlueprintCallable)
 	void PlaySwingSound();
 };
+
 
