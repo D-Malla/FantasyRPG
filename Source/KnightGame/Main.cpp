@@ -109,11 +109,12 @@ void AMain::Tick(float DeltaTime)
 			else
 			{
 				Stamina -= DeltaStamina;
-				SetMovementStatus(EMovementStatus::EMS_Normal);
 			}
+			
+			SetMovementStatus(EMovementStatus::EMS_Sprinting);
 		}
 		else // Shift key up
-			{
+		{
 			if (Stamina + DeltaStamina >= MaxStamina)
 			{
 				Stamina = MaxStamina;
@@ -122,27 +123,27 @@ void AMain::Tick(float DeltaTime)
 			{
 				Stamina += DeltaStamina;
 			}
+			
 			SetMovementStatus(EMovementStatus::EMS_Normal);
-			}
+		}
 		break;
 	case EStaminaStatus::ESS_BelowMinimum:
 		if (bShiftKeyDown && (bMovingForward || bMovingRight))
 		{
-			SetMovementStatus(EMovementStatus::EMS_Sprinting);
-			
 			if (Stamina - DeltaStamina <= 0.f)
 			{
 				SetStaminaStatus(EStaminaStatus::ESS_Exhausted);
-				Stamina = 0.f;
+				Stamina = 0;
 				SetMovementStatus(EMovementStatus::EMS_Normal);
 			}
 			else
 			{
 				Stamina -= DeltaStamina;
+				SetMovementStatus(EMovementStatus::EMS_Sprinting);
 			}
 		}
 		else // Shift key up
-			{
+		{
 			if (Stamina + DeltaStamina >= MinSprintStamina)
 			{
 				SetStaminaStatus(EStaminaStatus::ESS_Normal);
@@ -152,31 +153,22 @@ void AMain::Tick(float DeltaTime)
 			{
 				Stamina += DeltaStamina;
 			}
+			
 			SetMovementStatus(EMovementStatus::EMS_Normal);
-			}
+		}
 		break;
 	case EStaminaStatus::ESS_Exhausted:
-		if (bShiftKeyDown && (bMovingForward || bMovingRight))
-		{
-			Stamina = 0.f;
-		}
-		else // Shift key up
-		{
-			SetStaminaStatus(EStaminaStatus::ESS_ExhaustedRecovering);
-			Stamina += DeltaStamina;
-		}
+		Stamina = 0.f;
+		SetStaminaStatus(EStaminaStatus::ESS_ExhaustedRecovering);
 		SetMovementStatus(EMovementStatus::EMS_Normal);
 		break;
 	case EStaminaStatus::ESS_ExhaustedRecovering:
 		if (Stamina + DeltaStamina >= MinSprintStamina)
 		{
 			SetStaminaStatus(EStaminaStatus::ESS_Normal);
-			Stamina += DeltaStamina;
 		}
-		else
-		{
-			Stamina += DeltaStamina;
-		}
+		
+		Stamina += DeltaStamina;
 		SetMovementStatus(EMovementStatus::EMS_Normal);
 		break;
 	default:
