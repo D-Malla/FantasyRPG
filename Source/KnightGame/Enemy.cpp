@@ -30,7 +30,7 @@ AEnemy::AEnemy()
 	CombatSphere->InitSphereRadius(75.f);
 
 	CombatCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("CombatCollision"));
-	CombatCollision->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("EnemySocket"));
+	CombatCollision->SetupAttachment(GetMesh(), FName("EnemySocket"));
 
 	bOverlappingCombatSphere = false;
 
@@ -57,6 +57,7 @@ void AEnemy::BeginPlay()
 
 	AggroSphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::AggroSphereOnOverlapBegin);
 	AggroSphere->OnComponentEndOverlap.AddDynamic(this, &AEnemy::AggroSphereOnOverlapEnd);
+	AggroSphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Ignore);
 	
 	CombatSphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::CombatSphereOnOverlapBegin);
 	CombatSphere->OnComponentEndOverlap.AddDynamic(this, &AEnemy::CombatSphereOnOverlapEnd);
@@ -154,7 +155,8 @@ void AEnemy::CombatSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent
 			CombatTarget = Main;
 			bOverlappingCombatSphere = true;
 			
-			Attack();
+			float AttackTime = FMath::FRandRange(AttackMinTime, AttackMaxTime);
+			GetWorldTimerManager().SetTimer(AttackTimer, this, &AEnemy::Attack, AttackTime);
 		}
 	}
 }
@@ -169,13 +171,8 @@ void AEnemy::CombatSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, 
 		if (Main)
 		{
 			bOverlappingCombatSphere = false;
-
-			if (EnemyMovementStatus != EEnemyMovementStatus::EMS_Attacking)
-			{
-				MoveToTarget(Main);
-				CombatTarget = nullptr;
-			}
-
+			MoveToTarget(Main);
+			CombatTarget = nullptr;
 			GetWorldTimerManager().ClearTimer(AttackTimer);
 		}
 	}
