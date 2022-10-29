@@ -219,6 +219,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void PlaySwingSound();
+
+	void UpdateCombatTarget();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	TSubclassOf<AEnemy> EnemyFilter;
 };
 
 
