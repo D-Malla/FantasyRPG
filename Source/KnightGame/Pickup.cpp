@@ -9,7 +9,7 @@
 
 APickup::APickup()
 {
-	CoinCount = 1;
+
 }
 
 void APickup::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -23,7 +23,7 @@ void APickup::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* O
 
 		if (Main)
 		{
-			Main->IncrementCoins(CoinCount);
+			OnPickupBP(Main);
 			Main->PickupLocations.Add(GetActorLocation());
 
 			if (OverlapParticles)
