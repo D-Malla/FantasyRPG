@@ -8,6 +8,7 @@
 
 class AEnemy;
 class AItem;
+class AItemStorage;
 class AMainPlayerController;
 class AWeapon;
 class UAnimMontage;
@@ -46,6 +47,9 @@ class KNIGHTGAME_API AMain : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AMain();
+
+	UPROPERTY(EditDefaultsOnly, Category = "SavedData")
+	TSubclassOf<AItemStorage> WeaponStorage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	bool bHasCombatTarget;
@@ -228,6 +232,14 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	TSubclassOf<AEnemy> EnemyFilter;
+
+	void SwitchLevel(FName LevelName);
+
+	UFUNCTION(BlueprintCallable)
+	void SaveGame();
+
+	UFUNCTION(BlueprintCallable)
+	void LoadGame(bool bSetPosition);
 };
 
 
