@@ -187,6 +187,12 @@ public:
 	
 	void LMBUp();
 
+	bool bESCDown;
+	
+	void ESCDown();
+	
+	void ESCUp();
+
 	FORCEINLINE USpringArmComponent* GetSpringArm() const { return SpringArmComponent; }
 	FORCEINLINE UCameraComponent* GetCamera() const { return CameraComponent; }
 	
