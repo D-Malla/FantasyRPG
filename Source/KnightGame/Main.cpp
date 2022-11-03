@@ -644,7 +644,7 @@ void AMain::LoadGame(bool bSetPosition)
 		{
 			const FString WeaponName = LoadGameInstance->CharacterStats.WeaponName;
 
-			if (Weapons->WeaponMap.Contains(WeaponName))
+			if (WeaponName != TEXT(""))
 			{
 				AWeapon* WeaponToEquip = GetWorld()->SpawnActor<AWeapon>(Weapons->WeaponMap[WeaponName]);
 				WeaponToEquip->Equip(this);
