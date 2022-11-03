@@ -53,6 +53,8 @@ public:
 
 	void RemoveEnemyHealthBar();
 
+	void GameModeOnly();
+
 protected:
 	virtual void BeginPlay() override;
 

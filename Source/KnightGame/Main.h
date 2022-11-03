@@ -171,9 +171,17 @@ public:
 	// Called for side to side input
 	void MoveRight(float Value);
 
+	// Called for Yaw Rotation
+	void Turn(float Value);
+
+	// Called for Pitch Rotation
+	void LookUp(float Value);
+
 	bool bMovingForward;
 
 	bool bMovingRight;
+
+	bool bCanMove(float Value) const;
 
 	// Called to look up/down at a given rate
 	// @param Rate This is a normalized rate, ie. 1.0 means 100% of desired look up/down rate
@@ -246,6 +254,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void LoadGame(bool bSetPosition);
+
+	void LoadGameNoSwitch();
 };
 
 
